@@ -8,43 +8,37 @@ struct btree
     struct btree *right;
 };
 
-struct btree *root;
-
-struct btree * initialize(struct btree * bt )
+struct btree * init()
 {
-    root=NULL;
-    bt->left=NULL;
-    bt->right=NULL;
-    
-    return root;
+    return NULL;
 }
 
 struct btree * createnode( int data )
 {
     struct btree* newnode;
+
     newnode=(struct btree*)malloc(sizeof(struct btree));
   
+    newnode->data=data;  
     newnode->left=NULL;
     newnode->right=NULL;
-
-    newnode->data=data;
 
     return newnode;
 }
 
-struct btree *insert( struct btree * bt,int data )
+void insert( struct btree **root ,int data )
 {
-    if ( bt == NULL )
+    if ( *root == NULL )
     {
-        bt=createnode(data);
+        *root=createnode(data);
     }
-    else if ( data < bt->data )
+    else if ( data < (*root)->data )
     {
-        insert((bt->left),data);
+        insert(&(*root)->left,data);
     }
     else
     {
-        insert((bt->right),data);
+        insert(&(*root)->right,data);
     }
 }
 
@@ -79,19 +73,18 @@ int main()
         switch ( choice )
         {
             case 1 : 
-                   bt=initialize(root);
-                   printf("\nHello i am here");
+                   bt=init();
                    break;
 
             case 2 :
                    printf("\nEnter the data you want to insert: ");
                    scanf("%d",&data);
-                   bt=insert(root,data);
+                   insert(&bt,data);
                    break;
 
             case 3 : 
                    printf("\nThe inorder traversal:\n");
-                   inorder(root);
+                   inorder(bt);
                    break;
 
             default : 
