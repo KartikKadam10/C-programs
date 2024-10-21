@@ -1,78 +1,114 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+
 typedef struct graph
 {
     int numvertices;
     int **adjmatrix;
 }Graph;
 
-
 Graph *creategraph( int numvertices )
 {
-    Graph *G= (Graph*)malloc(sizeof(Graph));
+    Graph *graph;
 
-    G->numvertices=numvertices;
+    graph=(Graph*)malloc(sizeof(Graph));
 
-    G->adjmatrix=(int **)malloc(numvertices*sizeof( int *));
+    graph->numvertices=numvertices;
+    
+    graph->adjmatrix=(int **)malloc(numvertices*sizeof(int*));
 
     for ( int i=0 ; i < numvertices ; i++ )
     {
-        G->adjmatrix[i]=(int *)malloc(numvertices * sizeof(int));
-        for ( int j=0 ; j < numvertices; j++ )
+        graph->adjmatrix[i]=(int*)malloc(numvertices*sizeof(int));
+
+        for ( int j=0 ; j< numvertices ; j++ )
         {
-            G->adjmatrix[i][j]=0;
+            graph->adjmatrix[i][j]=0;
         }
     }
 
-    return G;
+    return graph;
 }
 
-void addedge( Graph *G , int src, int dest )
+void addedge(Graph *graph, int src ,int dest )
 {
-    if ( src>=0 && src < G->numvertices && dest>=0 && dest < G->numvertices )
+    if ( src >=0 || src< graph->numvertices || dest >=0 || dest < graph->numvertices  )
     {
-        G->adjmatrix[src][dest]=1;
+        graph->adjmatrix[src][dest]=1;
     }
 }
 
-void printmatrix(Graph *G )
+void printmatrix(Graph * graph )
 {
-    printf("\n\nThe Adjacency matrix of the graph: \n");
-    for ( int i=0 ; i < G->numvertices ; i++ )
+    printf("\nThe adjacency matrix of the given graph:\n");
+    
+    for ( int i=0 ; i < graph->numvertices ; i++ )
     {
-        for ( int j=0 ; j < G->numvertices ; j++ )
+        for ( int j=0 ; j < graph->numvertices ; j++ )
         {
-            printf("\t%d",G->adjmatrix[i][j]);
+            printf("\t%d",graph->adjmatrix[i][j]);
         }
         printf("\n");
     }
 }
 
+int outdegree(Graph *graph , int vertex )
+{
+    int out=0;
+    for ( int i=0 ; i<graph->numvertices ; i++ )
+    {
+          if ( graph->adjmatrix[vertex][i]==1)
+              out++;
+    }
+
+    return out;
+}
+
+int indegree(Graph *graph , int vertex )
+{
+    int ind=0;
+    for ( int i=0 ; i<graph->numvertices ; i++ )
+    {
+          if ( graph->adjmatrix[i][vertex]==1)
+              ind++;
+    }
+
+    return ind++;
+}
+
+
+
 int main()
 {
     int numvertices, numedges, src , dest;
-
+   
     printf("\nEnter the number of vertices of graph: ");
     scanf("%d",&numvertices);
+ 
+    Graph *graph=creategraph(numvertices);
 
-    Graph *Graph=creategraph(numvertices);
-
-    printf("\nEnter the number of edges : ");
+    printf("\nEnter the number of edges: ");
     scanf("%d",&numedges);
 
-    for ( int i=0 ; i < numedges ; i++ )
+    for ( int i=0 ; i<numedges; i++ )
     {
-        printf("\nEnter the source of the vertex %d : ",i+1);
-        scanf("%d", &src );
+        printf("\nEnter the source vertex of %d vertex: ",i+1);
+        scanf("%d",&src);
 
-        printf("\nEnter the destination of the vertex %d : ",i+1);
-        scanf("%d", &dest );
+        printf("\nEnter the destination vertex of %d vertex: ",i+1);
+        scanf("%d",&dest);
 
-        addedge(Graph,src,dest);
+        addedge(graph,src,dest);
     }
 
-    printmatrix(Graph);
+    printmatrix(graph);
 
-    return 0;
+    printf("\nThe Indegree of all vertices:\n");
+
+    for ( int i=0 ; i<numvertices ; i++ )
+    {
+        printf("\n Vertex -> %d  Indegree : %d\t Outdegree : %d",i , indegree(graph,i),outdegree(graph,i));
+    }
+
 }
