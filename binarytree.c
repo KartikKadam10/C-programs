@@ -54,7 +54,7 @@ void inorder(struct node *root )
 
 struct node * search(struct node *root , int target )
 {
-    if ( root->data == target || root==NULL )
+    if ( root==NULL || root->data==target )
     {
         return root;
     }
